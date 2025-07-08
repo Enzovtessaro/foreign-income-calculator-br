@@ -1,9 +1,6 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InputForm } from "./calculator/InputForm";
-import { ResultsDisplay } from "./calculator/ResultsDisplay";
 import { CalculationBreakdown } from "./calculator/CalculationBreakdown";
 import { calculateTaxes } from "@/utils/taxCalculations";
 import { convertCurrency } from "@/utils/currencyUtils";
@@ -97,24 +94,7 @@ export const Calculator = () => {
       </Card>
 
       {results && (
-        <Tabs defaultValue="results" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 bg-slate-100">
-            <TabsTrigger value="results" className="text-lg py-3">
-              Resultados
-            </TabsTrigger>
-            <TabsTrigger value="breakdown" className="text-lg py-3">
-              Detalhamento
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="results">
-            <ResultsDisplay results={results} data={calculatorData} />
-          </TabsContent>
-
-          <TabsContent value="breakdown">
-            <CalculationBreakdown results={results} data={calculatorData} />
-          </TabsContent>
-        </Tabs>
+        <CalculationBreakdown results={results} data={calculatorData} />
       )}
     </div>
   );
