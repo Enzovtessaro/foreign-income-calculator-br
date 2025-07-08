@@ -57,12 +57,9 @@ export const Calculator = () => {
     setLoading(true);
     
     try {
-      // If exchange rate is 0, try to fetch it
-      let finalData = { ...data };
-      if (data.exchangeRate === 0) {
-        const rate = await convertCurrency(data.currency);
-        finalData.exchangeRate = rate;
-      }
+      // Sempre buscar a taxa de câmbio automaticamente
+      const rate = await convertCurrency(data.currency);
+      const finalData = { ...data, exchangeRate: rate };
 
       const calculationResults = calculateTaxes(finalData);
       setCalculatorData(finalData);

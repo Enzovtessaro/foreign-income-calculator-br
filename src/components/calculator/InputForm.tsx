@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent } from "@/components/ui/card";
 import { Calculator, DollarSign, Building2, User } from "lucide-react";
 import { CalculatorData } from "../Calculator";
+import { getCurrencySymbol } from "@/utils/currencyUtils";
 
 interface InputFormProps {
   onCalculate: (data: CalculatorData) => void;
@@ -29,11 +30,11 @@ export const InputForm = ({ onCalculate, loading }: InputFormProps) => {
   };
 
   const currencies = [
-    { value: "USD", label: "Dólar Americano (USD)" },
-    { value: "EUR", label: "Euro (EUR)" },
-    { value: "GBP", label: "Libra Esterlina (GBP)" },
-    { value: "CAD", label: "Dólar Canadense (CAD)" },
-    { value: "AUD", label: "Dólar Australiano (AUD)" },
+    { value: "USD", label: "USD - Dólar Americano" },
+    { value: "EUR", label: "EUR - Euro" },
+    { value: "GBP", label: "GBP - Libra Esterlina" },
+    { value: "CAD", label: "CAD - Dólar Canadense" },
+    { value: "AUD", label: "AUD - Dólar Australiano" },
   ];
 
   return (
@@ -52,57 +53,48 @@ export const InputForm = ({ onCalculate, loading }: InputFormProps) => {
             <div className="space-y-4">
               <div>
                 <Label htmlFor="foreignAmount">Valor em Moeda Estrangeira</Label>
-                <Input
-                  id="foreignAmount"
-                  type="number"
-                  step="0.01"
-                  value={formData.foreignAmount || ""}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    foreignAmount: parseFloat(e.target.value) || 0
-                  }))}
-                  className="text-lg"
-                  required
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="currency">Moeda</Label>
-                <Select
-                  value={formData.currency}
-                  onValueChange={(value) => setFormData(prev => ({
-                    ...prev,
-                    currency: value
-                  }))}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {currencies.map((curr) => (
-                      <SelectItem key={curr.value} value={curr.value}>
-                        {curr.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label htmlFor="exchangeRate">
-                  Taxa de Câmbio (deixe 0 para buscar automaticamente)
-                </Label>
-                <Input
-                  id="exchangeRate"
-                  type="number"
-                  step="0.0001"
-                  value={formData.exchangeRate || ""}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    exchangeRate: parseFloat(e.target.value) || 0
-                  }))}
-                  placeholder="Ex: 5.2500"
-                />
+                <div className="flex gap-2">
+                  <Select
+                    value={formData.currency}
+                    onValueChange={(value) => setFormData(prev => ({
+                      ...prev,
+                      currency: value
+                    }))}
+                  >
+                    <SelectTrigger className="w-32">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {currencies.map((curr) => (
+                        <SelectItem key={curr.value} value={curr.value}>
+                          {curr.value}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  
+                  <div className="flex-1 relative">
+                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
+                      {getCurrencySymbol(formData.currency)}
+                    </span>
+                    <Input
+                      id="foreignAmount"
+                      type="number"
+                      step="0.01"
+                      value={formData.foreignAmount || ""}
+                      onChange={(e) => setFormData(prev => ({
+                        ...prev,
+                        foreignAmount: parseFloat(e.target.value) || 0
+                      }))}
+                      className="text-lg pl-8"
+                      placeholder="0.00"
+                      required
+                    />
+                  </div>
+                </div>
+                <p className="text-xs text-gray-600 mt-1">
+                  A taxa de câmbio será buscada automaticamente
+                </p>
               </div>
             </div>
           </CardContent>
@@ -121,17 +113,23 @@ export const InputForm = ({ onCalculate, loading }: InputFormProps) => {
             <div className="space-y-4">
               <div>
                 <Label htmlFor="proLabore">Pró-Labore Mensal (R$)</Label>
-                <Input
-                  id="proLabore"
-                  type="number"
-                  step="0.01"
-                  value={formData.proLabore || ""}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    proLabore: parseFloat(e.target.value) || 0
-                  }))}
-                  placeholder="Ex: 3000.00"
-                />
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
+                    R$
+                  </span>
+                  <Input
+                    id="proLabore"
+                    type="number"
+                    step="0.01"
+                    value={formData.proLabore || ""}
+                    onChange={(e) => setFormData(prev => ({
+                      ...prev,
+                      proLabore: parseFloat(e.target.value) || 0
+                    }))}
+                    className="pl-8"
+                    placeholder="3000.00"
+                  />
+                </div>
               </div>
 
               <div>
