@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { InputForm } from "./calculator/InputForm";
@@ -81,21 +82,23 @@ export const Calculator = () => {
   };
 
   return (
-    <div className="space-y-8">
-      <Card className="bg-white shadow-xl border-0">
-        <CardHeader className="bg-gradient-to-r from-blue-600 to-green-600 text-white rounded-t-lg">
-          <CardTitle className="text-2xl text-center">
-            Calculadora de Impostos PJ
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-8">
-          <InputForm onCalculate={handleCalculate} loading={loading} />
-        </CardContent>
-      </Card>
+    <div className="min-h-screen bg-gray-50 py-8 px-4">
+      <div className="max-w-4xl mx-auto space-y-8">
+        <Card className="bg-white shadow-lg border-0 rounded-3xl overflow-hidden">
+          <CardHeader className="bg-gradient-to-r from-gray-900 to-gray-700 text-white">
+            <CardTitle className="text-3xl text-center font-bold">
+              Calculadora de Impostos PJ
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-8">
+            <InputForm onCalculate={handleCalculate} loading={loading} />
+          </CardContent>
+        </Card>
 
-      {results && (
-        <CalculationBreakdown results={results} data={calculatorData} />
-      )}
+        {results && (
+          <CalculationBreakdown results={results} data={calculatorData} />
+        )}
+      </div>
     </div>
   );
 };
