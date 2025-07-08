@@ -1,18 +1,13 @@
-
 import { Calculator } from "@/components/Calculator";
-
 const Index = () => {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+  return <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-slate-800 mb-6">
             Calculadora PJ Exterior
           </h1>
-          <h2 className="text-xl md:text-2xl text-blue-600 font-semibold mb-4">
-            Descubra seu Salário Líquido Real!
-          </h2>
+          
           <p className="text-lg text-slate-600 max-w-4xl mx-auto leading-relaxed">
             Presta serviços para empresas estrangeiras? Entenda quanto realmente sobra no seu bolso, 
             considerando impostos e taxas, e compare os regimes do Simples Nacional e Lucro Presumido.
@@ -79,8 +74,6 @@ const Index = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
