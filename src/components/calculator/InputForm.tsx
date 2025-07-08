@@ -1,16 +1,20 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Calculator, DollarSign, Building2, User } from "lucide-react";
 import { CalculatorData } from "../Calculator";
 import { getCurrencySymbol } from "@/utils/currencyUtils";
+
 interface InputFormProps {
   onCalculate: (data: CalculatorData) => void;
   loading: boolean;
 }
+
 export const InputForm = ({
   onCalculate,
   loading
@@ -21,12 +25,15 @@ export const InputForm = ({
     exchangeRate: 0,
     proLabore: 0,
     municipality: "",
-    issRate: 5
+    issRate: 2,
+    contributeINSS: false
   });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onCalculate(formData);
   };
+
   const currencies = [{
     value: "USD",
     label: "USD - Dólar Americano"
@@ -43,6 +50,7 @@ export const InputForm = ({
     value: "AUD",
     label: "AUD - Dólar Australiano"
   }];
+
   return <form onSubmit={handleSubmit} className="space-y-8">
       <div className="grid md:grid-cols-2 gap-8">
         {/* Foreign Income Section */}
@@ -83,7 +91,6 @@ export const InputForm = ({
                   }))} className="text-lg pl-8" placeholder="0.00" required />
                   </div>
                 </div>
-                
               </div>
             </div>
           </CardContent>
@@ -109,8 +116,11 @@ export const InputForm = ({
                   <Input id="proLabore" type="number" step="0.01" value={formData.proLabore || ""} onChange={e => setFormData(prev => ({
                   ...prev,
                   proLabore: parseFloat(e.target.value) || 0
-                }))} className="pl-8" placeholder="3000.00" />
+                }))} className="pl-8" placeholder="0.00" />
                 </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  Deixe em branco ou zero para distribuição de lucros isenta
+                </p>
               </div>
 
               <div>
@@ -121,23 +131,22 @@ export const InputForm = ({
               }))} placeholder="Ex: São Paulo" />
               </div>
 
-              <div>
-                <Label htmlFor="issRate">Taxa ISS (%)</Label>
-                <Select value={formData.issRate.toString()} onValueChange={value => setFormData(prev => ({
-                ...prev,
-                issRate: parseFloat(value)
-              }))}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="2">2% - Taxa mínima</SelectItem>
-                    <SelectItem value="3">3%</SelectItem>
-                    <SelectItem value="4">4%</SelectItem>
-                    <SelectItem value="5">5% - Taxa padrão</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="contributeINSS" 
+                  checked={formData.contributeINSS}
+                  onCheckedChange={(checked) => setFormData(prev => ({
+                    ...prev,
+                    contributeINSS: checked === true
+                  }))}
+                />
+                <Label htmlFor="contributeINSS" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Contribuir para o INSS
+                </Label>
               </div>
+              <p className="text-xs text-gray-500">
+                ISS: 2% (taxa padrão aplicada automaticamente)
+              </p>
             </div>
           </CardContent>
         </Card>

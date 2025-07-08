@@ -36,10 +36,10 @@ export function calculateTaxes(data: CalculatorData): CalculationResults {
   const annualProLabore = data.proLabore * 12;
   
   // Calculate Simples Nacional
-  const simplesResults = calculateSimplesNacional(receivedByPJ, annualRevenue, data.proLabore, annualProLabore);
+  const simplesResults = calculateSimplesNacional(receivedByPJ, annualRevenue, data.proLabore, annualProLabore, data.contributeINSS);
   
-  // Calculate Lucro Presumido
-  const presumidoResults = calculateLucroPresumido(receivedByPJ, data.proLabore, data.issRate);
+  // Calculate Lucro Presumido (no pro-labore, only profit distribution)
+  const presumidoResults = calculateLucroPresumido(receivedByPJ, data.issRate);
   
   return {
     grossBRL,
@@ -50,7 +50,7 @@ export function calculateTaxes(data: CalculatorData): CalculationResults {
   };
 }
 
-function calculateSimplesNacional(monthlyRevenue: number, annualRevenue: number, monthlyProLabore: number, annualProLabore: number) {
+function calculateSimplesNacional(monthlyRevenue: number, annualRevenue: number, monthlyProLabore: number, annualProLabore: number, contributeINSS: boolean) {
   // Calculate Fator R
   const fatorR = annualRevenue > 0 ? (annualProLabore / annualRevenue) * 100 : 0;
   
@@ -77,8 +77,11 @@ function calculateSimplesNacional(monthlyRevenue: number, annualRevenue: number,
     }
   }
   
-  // Calculate PF taxes (INSS + IRPF on pro-labore)
-  const pfTax = calculatePFTaxes(monthlyProLabore);
+  // Calculate PF taxes only if pro-labore > 0 and contributeINSS is checked
+  let pfTax = 0;
+  if (monthlyProLabore > 0 && contributeINSS) {
+    pfTax = calculatePFTaxes(monthlyProLabore);
+  }
   
   const netAmount = monthlyRevenue - pjTax - pfTax;
   
@@ -92,7 +95,7 @@ function calculateSimplesNacional(monthlyRevenue: number, annualRevenue: number,
   };
 }
 
-function calculateLucroPresumido(monthlyRevenue: number, monthlyProLabore: number, issRate: number) {
+function calculateLucroPresumido(monthlyRevenue: number, issRate: number) {
   // PIS and COFINS are zero for service exports
   const presumedProfit = monthlyRevenue * 0.32; // 32% presumed profit
   
@@ -110,12 +113,8 @@ function calculateLucroPresumido(monthlyRevenue: number, monthlyProLabore: numbe
   
   const pjTax = irpj + csll + iss;
   
-  // PF taxes depend on whether there's pro-labore or just profit distribution
-  let pfTax = 0;
-  if (monthlyProLabore > 0) {
-    pfTax = calculatePFTaxes(monthlyProLabore);
-  }
-  // If no pro-labore, assume profit distribution (tax-free for individuals)
+  // No PF taxes for Lucro Presumido (profit distribution is tax-free)
+  const pfTax = 0;
   
   const netAmount = monthlyRevenue - pjTax - pfTax;
   

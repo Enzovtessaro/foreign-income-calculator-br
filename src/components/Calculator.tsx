@@ -16,6 +16,7 @@ export interface CalculatorData {
   proLabore: number;
   municipality: string;
   issRate: number;
+  contributeINSS: boolean;
 }
 
 export interface CalculationResults {
@@ -47,7 +48,8 @@ export const Calculator = () => {
     exchangeRate: 0,
     proLabore: 0,
     municipality: "",
-    issRate: 5,
+    issRate: 2,
+    contributeINSS: false,
   });
 
   const [results, setResults] = useState<CalculationResults | null>(null);
